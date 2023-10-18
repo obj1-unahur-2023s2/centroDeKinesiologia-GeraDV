@@ -1,0 +1,133 @@
+import pacientes.*
+import aparatos.*
+import rutinas.*
+import centro.*
+
+describe "Test de aparatos"{
+	const leonardo = new Paciente(edad=40, dolor=10, fortaleza=20)
+	const milena = new Paciente(edad=3, dolor=30, fortaleza=50)
+	const nicolas = new Resistente(edad=40, dolor=10, fortaleza=20)
+	const victoria = new Caprichoso(edad=30,dolor=10, fortaleza=40)
+	const julian = new Caprichoso(edad=20, dolor=54, fortaleza=50)
+	const zoe = new RapidaRecuperacion(edad=50, dolor=14, fortaleza=40)
+	
+	const magneto = new Magneto(color="verde")
+	const bici = new Bicicleta(color="rojo")
+	const minitramp = new Minitramp()
+	
+	//Rutina
+	
+	method initialize(){
+		const rutinaLeo = new Rutina()	
+		rutinaLeo.agregarARutina(bici)
+		rutinaLeo.agregarARutina(minitramp)
+		rutinaLeo.agregarARutina(bici)
+		rutinaLeo.agregarARutina(magneto)
+		leonardo.asignarRutina(rutinaLeo)
+		
+		const rutinaMilena = new Rutina()
+		rutinaMilena.agregarARutina(magneto)
+		rutinaMilena.agregarARutina(bici)
+		milena.asignarRutina(rutinaMilena)
+		
+		const rutinaJulian = new Rutina()
+		const biciBlanca = new Bicicleta()
+		rutinaJulian.agregarARutina(bici)
+		rutinaJulian.agregarARutina(magneto)
+		rutinaJulian.agregarARutina(biciBlanca)
+		julian.asignarRutina(rutinaJulian)
+		
+		nicolas.asignarRutina(rutinaLeo)
+		victoria.asignarRutina(rutinaLeo)
+		zoe.asignarRutina(rutinaLeo)
+		
+		
+		centro.agregarPaciente(leonardo)
+		centro.agregarPaciente(milena)
+		centro.agregarPaciente(julian)
+		centro.agregarPaciente(nicolas)
+		centro.agregarPaciente(victoria)
+		centro.agregarPaciente(zoe)
+		
+		centro.agregarAparato(magneto)
+		centro.agregarAparato(bici)
+		centro.agregarAparato(minitramp)
+		centro.agregarAparato(biciBlanca)
+	}
+
+	
+	test "Valores de Leonardo luego de usar la Bicicleta"{
+		leonardo.usarAparato(bici)
+		assert.equals(6, leonardo.dolor())
+		assert.equals(23, leonardo.fortaleza())
+	}
+	
+	test "Valores de Leonardo luego de usar el Magneto"{
+		leonardo.usarAparato(magneto)
+		assert.equals(9, leonardo.dolor())
+	}
+	
+	test "Valores de Leonardo luego de usar la Minitramp"{
+		leonardo.usarAparato(minitramp)
+		assert.equals(24, leonardo.fortaleza())
+	}
+	
+	test "Valores de Milena luego de usar el Magneto"{
+		milena.usarAparato(magneto)		
+		assert.equals(27, milena.dolor())
+	}
+	
+	test "Aparatos que puede o no usar Milena"{
+		assert.that(magneto.sePuedeUsar(milena))
+		assert.notThat(minitramp.sePuedeUsar(milena))
+		assert.notThat(bici.sePuedeUsar(milena))
+	}
+	
+	test "Aparatos que puede o no usar Leonardo"{
+		assert.that(magneto.sePuedeUsar(leonardo))
+		assert.that(minitramp.sePuedeUsar(leonardo))
+		assert.that(bici.sePuedeUsar(leonardo))
+	}
+	
+	test "Rutina para Leonardo"{
+		leonardo.realizarRutina()
+		assert.equals(1.8,leonardo.dolor())
+		assert.equals(30, leonardo.fortaleza())
+	}
+	
+	test "Milena no puede realizar una rutina que tenga bici"{
+		assert.notThat(milena.puedeHacerRutina())
+	}
+	
+	test "Rutina para Nicolás"{
+		nicolas.realizarRutina()
+		assert.equals(1.8,nicolas.dolor())
+		assert.equals(34, nicolas.fortaleza())
+	}
+	
+	test "Rutina para Victoria"{
+		victoria.realizarRutina()
+		assert.equals(0,victoria.dolor())
+		assert.equals(58, victoria.fortaleza())
+	}
+	
+	test "Rutina para Julian"{
+		julian.realizarRutina()
+		assert.equals(29.3,julian.dolor())
+		assert.equals(62, julian.fortaleza())
+	}
+	
+	test "Rutina para Zoe"{
+		recuperacion.valorRecuperacion(2)
+		zoe.realizarRutina()
+		assert.equals(3.4, zoe.dolor())
+		assert.equals(51, zoe.fortaleza())
+	}
+	
+	test "Colores de aparatos"{
+		const colores = #{"rojo", "verde", "blanco"}
+		assert.equals(colores, centro.coloresAparatosSinRepetir())
+	}
+	
+}
+
